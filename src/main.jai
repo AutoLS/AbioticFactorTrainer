@@ -9,6 +9,7 @@
 #load "input.jai";
 #load "util.jai";
 #load "proc.jai";
+#load "cheat.jai";
 window: *SDL_Window;
 
 main :: ()
@@ -55,14 +56,8 @@ main :: ()
 	clear_color := Vector4.{0, 0, 0, 1.00};
 	main_tool_active: bool;
 
-	abf := attach_process("AbioticFactor-Win64-Shipping.exe");
-	print("Process Attachment: %\n", abf);
-
-	test_addr := abf.base_addr + 1;
-	print("test_base_addr: %\n", test_addr);
-
-	hotbar_slot1_addr := get_dynamic_memory_allocation_addr(abf, 0x074CCE00, u32.[0x2A8, 0x310, 0x320, 0xC0, 0x198, 0xA8, 0x30]);
-	//print("hotbar_slot1_addr: %\n", cast(u64)hotbar_slot1_addr);
+	cheat: Cheat;
+	init_cheat("AbioticFactor-Win64-Shipping.exe", *cheat);
 
 	while running
 	{
@@ -127,36 +122,12 @@ main :: ()
 		
 		ImGui.Begin("Template", *main_tool_active, 
 					IMGUI_WINDOW_FLAGS.NoTitleBar | 
-					IMGUI_WINDOW_FLAGS.MenuBar |
 					IMGUI_WINDOW_FLAGS.NoMove |
 					IMGUI_WINDOW_FLAGS.NoResize |
 					IMGUI_WINDOW_FLAGS.NoBackground);
-		if ImGui.BeginMenuBar()
-		{
-			defer ImGui.EndMenuBar();
-			if ImGui.BeginMenu("File")
-			{
-				defer ImGui.EndMenu();
-				is_new_file = ImGui.MenuItem("New", "Ctrl+N");
 
-				is_open_file = ImGui.MenuItem("Open..", "Ctrl+O");
-
-				is_save_file = ImGui.MenuItem("Save", "Ctrl+S");
-
-				if ImGui.MenuItem("Save as..") 
-				{
-					
-				}
-			}
-		}
-
-		hotbar_slot_item_count: u32;
-		ReadProcessMemory(abf.process, cast(*void)hotbar_slot1_addr, *hotbar_slot_item_count, size_of(u32), null);
-		ImGui.Text("Item Count: %", hotbar_slot_item_count);
-		// new_hotbar_slot1_count: u32 = hotbar_slot_item_count;
-		// ImGui.PushItemWidth(100);
-		// ImGui.InputScalar("Hotbar slot", ImGui.DataType.U32, *new_hotbar_slot1_count);
-		// ImGui.PopItemWidth();
+		hotbar_slot1_input(cheat);
+		unlimited_stamina_checkbox(cheat);
 		
 		ImGui.End();
 
