@@ -109,11 +109,21 @@ find_dynamic_memory_allocation_addr :: (attachment: Process_Attach, base_addr: *
     return cast(*u64)result;
 }
 
-get_dynamic_memory_allocation_addr :: (attachment: Process_Attach, mem_addr: u64, offset: [] u32) -> *u64
+get_dynamic_memory_allocation_addr :: (attachment: Process_Attach, mem_addr_offset: u64, offset: [] u32) -> *u64
 {
-    dynamic_ptr_base_addr: *u8 = cast(*u8)attachment.base_addr + mem_addr;
+    dynamic_ptr_base_addr: *u8 = cast(*u8)attachment.base_addr + mem_addr_offset;
     result := find_dynamic_memory_allocation_addr(attachment, cast(*u64)dynamic_ptr_base_addr, offset);
 
     return result;
+}
+
+write_value :: (attachment: Process_Attach, mem_addr: *u64, value: *$T)
+{
+    data: T;
+    //* NOTE: Check if memory is valid before writing
+    if ReadProcessMemory(attachment.process, cast(*void)mem_addr, *data, size_of(T), null)
+    {
+        WriteProcessMemory(attachment.process, cast(*void)mem_addr, value, size_of(T), null);
+    }
 }
 
