@@ -117,6 +117,11 @@ get_dynamic_memory_allocation_addr :: (attachment: Process_Attach, mem_addr_offs
     return result;
 }
 
+read_value :: (attachment: Process_Attach, mem_addr: *u64, value: *$T)
+{
+    ReadProcessMemory(attachment.process, cast(*void)mem_addr, *value, size_of(T), null);
+}
+
 write_value :: (attachment: Process_Attach, mem_addr: *u64, value: *$T)
 {
     data: T;
