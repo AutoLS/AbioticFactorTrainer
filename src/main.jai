@@ -128,6 +128,9 @@ main :: ()
 
 		hotbar_slot1_input(cheat);
 		unlimited_stamina_checkbox(cheat);
+		ImGui.NewLine();
+		ImGui.Separator();
+		teleport_menu(cheat);
 		
 		ImGui.End();
 
