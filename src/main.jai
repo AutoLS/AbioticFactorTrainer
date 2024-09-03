@@ -21,7 +21,7 @@ main :: ()
 		"Abf Trainer", 
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, 
-		300, 300,
+		400, 400,
 		SDL_WINDOW_OPENGL
 	);
 
@@ -127,7 +127,9 @@ main :: ()
 					IMGUI_WINDOW_FLAGS.NoBackground);
 
 		hotbar_slot1_input(cheat);
-		unlimited_stamina_checkbox(cheat);
+		ImGui.NewLine();
+		ImGui.Separator();
+		checkbox_cheat(cheat);
 		ImGui.NewLine();
 		ImGui.Separator();
 		teleport_menu(cheat);
