@@ -124,7 +124,11 @@ main :: ()
 		{
 			if cheat.current_game == 
 			{
-				case .Abiotic_Factor; cheat.game = attach_process(ABIOTIC_FACTOR_EXE_NAME);
+				case .Abiotic_Factor;
+				{
+					cheat.game = attach_process(ABIOTIC_FACTOR_EXE_NAME);
+					init_abf_cheat(*cheat.abf, cheat.game);
+				}
 			}
 		} 
 		

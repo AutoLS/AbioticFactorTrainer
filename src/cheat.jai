@@ -17,7 +17,5 @@ Cheat :: struct
 init_cheat :: (cheat: *Cheat)
 {
     table_add(*cheat.exe_name_table, .Abiotic_Factor, ABIOTIC_FACTOR_EXE_NAME);
-
-    init_abf_cheat(*cheat.abf, cheat.game);
 }
 
