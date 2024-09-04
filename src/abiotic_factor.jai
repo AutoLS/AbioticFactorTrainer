@@ -68,14 +68,16 @@ hotbar_slot1_input :: (abf: *Abiotic_Factor, game: Process_Attach)
             read_value(game, xx max_dura_decay_addr, *max_value);
             write_value(game, xx durability_decay_addr, *max_value);
         }
+/*      THIS IS NOT STATIC
         if ImGui.Button("Max battery")
         {
-            max_value_addr := cast(*u8)addr + 0x58BB6C40; //Don't know if this is static
+            max_value_addr := cast(*u8)addr + 0x58BB6C40; 
             battery_addr := cast(*u8)addr + 0x8;
             max_battery: u32;
             read_value(game, xx max_value_addr, *max_battery);
             write_value(game, xx battery_addr, *max_battery);
         }
+*/
     }
 }
 checkbox_cheat :: (using abf: *Abiotic_Factor, game: Process_Attach)
