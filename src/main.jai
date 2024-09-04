@@ -119,6 +119,10 @@ main :: ()
 			id := get_process_id(exe_name);
 			if id == 0 then cheat.game.attached = false;
 		}
+		else
+		{
+			cheat.game.attached = false;
+		}
 
 		if !cheat.game.attached
 		{
@@ -162,6 +166,8 @@ main :: ()
 			{
 				defer ImGui.EndMenu();
 				if ImGui.MenuItem("Abiotic Factor", null) cheat.current_game = .Abiotic_Factor;
+				if ImGui.MenuItem("Corekeeper", null) cheat.current_game = .Corekeeper;
+				if ImGui.MenuItem("Risk of Rain 2", null) cheat.current_game = .Risk_of_Rain;
 			}
 		}
 

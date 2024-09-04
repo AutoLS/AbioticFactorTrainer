@@ -3,6 +3,8 @@
 Game_Name :: enum u32
 {
     Abiotic_Factor;
+    Corekeeper;
+    Risk_of_Rain;
 }
 
 Cheat :: struct
