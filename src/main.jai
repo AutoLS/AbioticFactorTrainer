@@ -18,7 +18,7 @@ main :: ()
 
 	window = SDL_CreateWindow
 	(
-		"Abf Trainer", 
+		"AutoCheat", 
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, 
 		400, 400,
@@ -57,7 +57,7 @@ main :: ()
 	main_tool_active: bool;
 
 	cheat: Cheat;
-	init_cheat("AbioticFactor-Win64-Shipping.exe", *cheat);
+	init_cheat(*cheat);
 
 	while running
 	{
@@ -113,6 +113,21 @@ main :: ()
 			}
         }
 
+		exe_name, found := table_find(*cheat.exe_name_table, cheat.current_game);
+		if found 
+		{
+			id := get_process_id(exe_name);
+			if id == 0 then cheat.game.attached = false;
+		}
+
+		if !cheat.game.attached
+		{
+			if cheat.current_game == 
+			{
+				case .Abiotic_Factor; cheat.game = attach_process(ABIOTIC_FACTOR_EXE_NAME);
+			}
+		} 
+		
 		ImGui_ImplSdl_NewFrame(window);
 		ImGui.NewFrame();
 
@@ -121,19 +136,42 @@ main :: ()
 		is_save_file := false;
 		
 		ImGui.Begin("Template", *main_tool_active, 
-					IMGUI_WINDOW_FLAGS.NoTitleBar | 
+					IMGUI_WINDOW_FLAGS.NoTitleBar |
+					IMGUI_WINDOW_FLAGS.MenuBar | 
 					IMGUI_WINDOW_FLAGS.NoMove |
 					IMGUI_WINDOW_FLAGS.NoResize |
 					IMGUI_WINDOW_FLAGS.NoBackground);
 
-		hotbar_slot1_input(cheat);
-		ImGui.NewLine();
-		ImGui.Separator();
-		checkbox_cheat(cheat);
-		ImGui.NewLine();
-		ImGui.Separator();
-		teleport_menu(cheat);
-		
+		if ImGui.BeginMenuBar()
+		{
+			defer ImGui.EndMenuBar();
+			if ImGui.BeginMenu("File")
+			{
+				defer ImGui.EndMenu();
+				is_new_file = ImGui.MenuItem("New", "Ctrl+N");
+
+				is_open_file = ImGui.MenuItem("Open..", "Ctrl+O");
+
+				is_save_file = ImGui.MenuItem("Save", "Ctrl+S");
+			}
+			if ImGui.BeginMenu("Menu")
+			{
+				defer ImGui.EndMenu();
+				if ImGui.MenuItem("Abiotic Factor", null) cheat.current_game = .Abiotic_Factor;
+			}
+		}
+
+		if cheat.game.attached
+		{
+			if cheat.current_game == 
+			{
+				case .Abiotic_Factor; abf_cheat_ui(*cheat.abf, cheat.game);
+			}
+		}
+		else
+		{
+			ImGui.Text("Game not found! Please launch the game first!");
+		}
 		ImGui.End();
 
 		ImGui.Render();

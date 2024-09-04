@@ -11,6 +11,7 @@ Process_Attach :: struct
     base_addr: *u64;
 
     name: string;
+    attached: bool;
 }
 
 attach_process :: (name: string) -> Process_Attach
@@ -25,6 +26,9 @@ attach_process :: (name: string) -> Process_Attach
         if result.process
         {
             result.base_addr = get_module_base_addr(result);
+            result.attached = true;
+            print("FOUND: %, ID: %\n", name, result.proc_id);
+            print("Process Attached.\n");
         }
     }
 
@@ -47,7 +51,7 @@ get_process_id :: (name: string) -> u32
             //print("process name: %\n", next_proc_name);
             if compare(next_proc_name, name) == 0
             {
-                print("FOUND: %\n", next_proc_name);
+                //print("FOUND: %\n", next_proc_name);
                 proc_id = proc_entry.th32ProcessID;
                 CloseHandle(h_snap);
                 return proc_id;
