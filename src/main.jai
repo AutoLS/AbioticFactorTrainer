@@ -130,8 +130,13 @@ main :: ()
 			{
 				case .Abiotic_Factor;
 				{
-					cheat.game = attach_process(ABIOTIC_FACTOR_EXE_NAME);
+					cheat.game = attach_process(ABIOTIC_FACTOR_EXE_NAME, ABIOTIC_FACTOR_EXE_NAME);
 					init_abf_cheat(*cheat.abf, cheat.game);
+				}
+				case .Ale_and_Tale;
+				{
+					cheat.game = attach_process(ALE_AND_TALE_EXE_NAME, ALE_AND_TALE_MODULE_NAME);
+					init_ale_and_tale_cheat(*cheat.ale_and_tale, cheat.game);
 				}
 			}
 		} 
@@ -166,8 +171,7 @@ main :: ()
 			{
 				defer ImGui.EndMenu();
 				if ImGui.MenuItem("Abiotic Factor", null) cheat.current_game = .Abiotic_Factor;
-				if ImGui.MenuItem("Corekeeper", null) cheat.current_game = .Corekeeper;
-				if ImGui.MenuItem("Risk of Rain 2", null) cheat.current_game = .Risk_of_Rain;
+				if ImGui.MenuItem("Ale and Tale Tavern", null) cheat.current_game = .Ale_and_Tale;
 			}
 		}
 
@@ -176,6 +180,7 @@ main :: ()
 			if cheat.current_game == 
 			{
 				case .Abiotic_Factor; abf_cheat_ui(*cheat.abf, cheat.game);
+				case .Ale_and_Tale; ale_and_tale_cheat_ui(*cheat.ale_and_tale, cheat.game);
 			}
 		}
 		else
