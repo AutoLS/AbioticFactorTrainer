@@ -11,13 +11,15 @@ Process_Attach :: struct
     base_addr: *u64;
 
     name: string;
+    module_name: string;
     attached: bool;
 }
 
-attach_process :: (name: string) -> Process_Attach
+attach_process :: (name: string, module_name: string) -> Process_Attach
 {
     result: Process_Attach;
     result.name = name;
+    result.module_name = module_name;
     result.proc_id = get_process_id(name);
 
     if result.proc_id != 0
@@ -81,7 +83,7 @@ get_module_base_addr :: (process: Process_Attach) -> *u64
         while Module32Next(h_snap, *module_entry)
         {
             module_name := to_string(module_entry.szModule.data);
-            if compare(module_name, process.name) == 0
+            if compare(module_name, process.module_name) == 0
             {
                 print("Module name: %, size: %\n", module_name, module_entry.modBaseSize);
                 module_base_addr = cast(*u64)module_entry.modBaseAddr;
