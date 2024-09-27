@@ -13,6 +13,9 @@ Abiotic_Factor :: struct
 {
     item_count: u32;
     unlimited_stamina: bool;
+
+    slot1_battery: u32;
+    unlimited_battery: bool;
     mem_addr: Table(string, *u64);
 
     tp_data: Teleport_Data;
@@ -20,7 +23,7 @@ Abiotic_Factor :: struct
 
 init_abf_cheat :: (using abf: *Abiotic_Factor, game: Process_Attach)
 {
-    hotbar_slot1_addr := get_dynamic_memory_allocation_addr(game, 0x074CCE00, u32.[0x140, 0x2A0, 0x310, 0x278, 0x88, 0xA8, 0x30]);
+    hotbar_slot1_addr := get_dynamic_memory_allocation_addr(game, 0x08553140, u32.[0xC8, 0x618, 0x10, 0x528, 0x2F0, 0xB0, 0x30]);
 
     stamina_addr := get_dynamic_memory_allocation_addr(game, 0x074AEF68, u32.[0, 0x20, 0x278, 0x1C8, 0xB0, 0x90, 0x8A4]);
 
@@ -34,15 +37,17 @@ init_abf_cheat :: (using abf: *Abiotic_Factor, game: Process_Attach)
 abf_cheat_ui :: (abf: *Abiotic_Factor, game: Process_Attach)
 {
     hotbar_slot1_input(abf, game);
+/*
     ImGui.NewLine();
     ImGui.Separator();
     checkbox_cheat(abf, game);
     ImGui.NewLine();
     ImGui.Separator();
     teleport_menu(abf, game);
+*/
 }
 
-hotbar_slot1_input :: (abf: *Abiotic_Factor, game: Process_Attach)
+hotbar_slot1_input :: (using abf: *Abiotic_Factor, game: Process_Attach)
 {
     addr, found := table_find(*abf.mem_addr, "hotbar_slot1");
     if found
@@ -68,16 +73,18 @@ hotbar_slot1_input :: (abf: *Abiotic_Factor, game: Process_Attach)
             read_value(game, xx max_dura_decay_addr, *max_value);
             write_value(game, xx durability_decay_addr, *max_value);
         }
-/*      THIS IS NOT STATIC
-        if ImGui.Button("Max battery")
+        if ImGui.Checkbox("Unlimited battery", *unlimited_battery)
         {
-            max_value_addr := cast(*u8)addr + 0x58BB6C40; 
             battery_addr := cast(*u8)addr + 0x8;
-            max_battery: u32;
-            read_value(game, xx max_value_addr, *max_battery);
-            write_value(game, xx battery_addr, *max_battery);
+            read_value(game, xx battery_addr, *slot1_battery);
+            if slot1_battery == 0 then slot1_battery = 5;
         }
-*/
+        if unlimited_battery
+        {
+            battery_addr := cast(*u8)addr + 0x8;
+            write_value(game, xx battery_addr, *slot1_battery);
+        }
+
     }
 }
 checkbox_cheat :: (using abf: *Abiotic_Factor, game: Process_Attach)
