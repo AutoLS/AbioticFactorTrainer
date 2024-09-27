@@ -138,6 +138,11 @@ main :: ()
 					cheat.game = attach_process(ALE_AND_TALE_EXE_NAME, ALE_AND_TALE_MODULE_NAME);
 					init_ale_and_tale_cheat(*cheat.ale_and_tale, cheat.game);
 				}
+				case .Supermarket_Together;
+				{
+					cheat.game = attach_process(SUPERMARKET_EXE_NAME, SUPERMARKET_MODULE_NAME);
+					init_supermarket_together_cheat(*cheat.spt, cheat.game);
+				}
 			}
 		} 
 		
@@ -172,6 +177,7 @@ main :: ()
 				defer ImGui.EndMenu();
 				if ImGui.MenuItem("Abiotic Factor", null) cheat.current_game = .Abiotic_Factor;
 				if ImGui.MenuItem("Ale and Tale Tavern", null) cheat.current_game = .Ale_and_Tale;
+				if ImGui.MenuItem("Supermarket Together", null) cheat.current_game = .Supermarket_Together;
 			}
 		}
 
@@ -181,6 +187,7 @@ main :: ()
 			{
 				case .Abiotic_Factor; abf_cheat_ui(*cheat.abf, cheat.game);
 				case .Ale_and_Tale; ale_and_tale_cheat_ui(*cheat.ale_and_tale, cheat.game);
+				case .Supermarket_Together; supermarket_cheat_ui(*cheat.spt, cheat.game);
 			}
 		}
 		else
